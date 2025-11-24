@@ -1,23 +1,29 @@
 <div class="main">
 <?php
-$sql = "SELECT * FROM items";
-$result = $conn->query(query: $sql);
-
-$default_image_path = "static/images/not-found.svg"; 
-
-if ($result->num_rows > 0) {
-  while($row = $result->fetch_assoc()) {
-    if (!empty($row["image_1"])) {
-    $image_src = $row["image_1"];
-    } else {
-    $image_src = $default_image_path;
+$stmt_category = $conn->prepare("SELECT category_name FROM categories");
+$stmt_category->execute();
+$category_result = $stmt_category->get_result();
+while ($row = mysqli_fetch_array($category_result, MYSQLI_NUM)) {
+        foreach ($row as $r) {
+            print "$r, ";
+        }
+        print "<br>";
     }
 
-    echo $row["item_name"]. " (" . $row["item_desc"]. ')';
-        echo '<img src="'.htmlspecialchars(string: $image_src).'" style="max-width:100px;max-height:100px" alt="'.htmlspecialchars(string: $row["item_name"]).'"><br>';
-    }
-  } else {
-  echo "0 results";
-}
+$stmt_group = $conn->prepare("SELECT group_name, group_type FROM sections");
+$stmt_group->execute();
+$group_result = $stmt_group->get_result();
+
+$stmt_equipment = $conn->prepare("SELECT item_code, item_name, item_desc, image_1 FROM items");
+$stmt_equipment->execute();
+$equipment_result = $stmt_equipment->get_result();
+
+$stmt_category = $conn->prepare("SELECT category_name FROM categories");
+$stmt_category->execute();
+$category_result = $stmt_category->get_result();
+
+$stmt_components = $conn->prepare("SELECT item_code, quantity, item_quality, item_location_code FROM components");
+$stmt_components->execute();
+$component_result = $stmt_components->get_result();
 ?>
 </div>

@@ -1,19 +1,32 @@
 <?php
-$stmt_group = $conn->prepare("SELECT group_name, group_type FROM sections");
-$stmt_group->execute();
-$group_result = $stmt_group->get_result();
-
-$stmt_equipment = $conn->prepare("SELECT item_code, item_name, item_desc, image_1 FROM items");
+$stmt_equipment = $conn->prepare("SELECT item_code, category_code, item_name, item_desc, image_1 FROM items");
 $stmt_equipment->execute();
 $equipment_result = $stmt_equipment->get_result();
 
-$stmt_category = $conn->prepare("SELECT category_name FROM categories");
+$stmt_category = $conn->prepare("SELECT category_code, category_name FROM categories");
 $stmt_category->execute();
 $category_result = $stmt_category->get_result();
+
+$grouped_equipment = [];
+// Loop through all equipment items
+if ($equipment_result->num_rows > 0) {
+    while ($item = $equipment_result->fetch_assoc()) {
+        $category_code = strtolower($item['category_code']);
+        // Group the item into the array indexed by its category_code
+        if (!isset($grouped_equipment[$category_code])) {
+            $grouped_equipment[$category_code] = [];
+        }
+        $grouped_equipment[$category_code][] = $item;
+    }
+}
 
 $stmt_components = $conn->prepare("SELECT item_code, quantity, item_quality, item_location_code FROM components");
 $stmt_components->execute();
 $component_result = $stmt_components->get_result();
+
+$stmt_group = $conn->prepare("SELECT group_name, group_type FROM sections");
+$stmt_group->execute();
+$group_result = $stmt_group->get_result();
 ?>
 
 <div class="main">
@@ -84,42 +97,75 @@ $component_result = $stmt_components->get_result();
                 </div>
             </div>
             </form>
+
             <form id="items-form" class="form-layout" action="#" method="post">
-            <div id="item_form" style="display: block;">
-                <div>
-                    <!-- MAKE RECUSIVE FOR EACH CATEGORY -->
-                    <div class="accordian-item">
-                        <button class="accordion-header" type="button">
-                            <h4><!-- ADD CATEGORY NAME HERE -->Lightwieght Tentage</h4>
-                        </button>
-                        <div class="accordion-content">
-                            <!-- ADD EACH ITEM IN CATEGORY HERE -->
-                            <div class="grid-layout">
-                                <div class="item-image"><img src="/online_quartermaster/static/images/item_images/Northgear4-1.png" style="max-width: max-content;"></div>
-                                
-                                <div class="item-name">
-                                    NorthGear 4 Person Tent
-                                    <span class="info-button" onclick="toggleDescription('item-desc-1')">i</span>
+                <div id="item_form" style="display: block;">
+                    <div>
+                        <?php
+                        if ($category_result->num_rows > 0) {
+                            while ($category = $category_result->fetch_assoc()) {
+                                $category_name = htmlspecialchars($category['category_name']);
+                                $category_code = $category['category_code'];
+                        ?>
+                                <div class="accordian-item">
+                                    <button class="accordion-header" type="button">
+                                        <h4><?php echo $category_name; ?></h4>
+                                    </button>
+                                    <div class="accordion-content">
+                                        <?php
+                                        // Check if there are items for the current category code
+                                        if (isset($grouped_equipment[$category_code])) {
+                                            // Loop through the items for this specific category
+                                            foreach ($grouped_equipment[$category_code] as $item) {
+                                                $item_name = htmlspecialchars($item['item_name']);
+                                                $item_desc = htmlspecialchars($item['item_desc']);
+                                                $image_path = htmlspecialchars($item['image_1']);
+                                                $item_code = $item['item_code'];
+                                        ?>
+                                                <div class="grid-layout">
+                                                    <div class="item-image">
+                                                        <img src="<?php echo $image_path; ?>" alt="<?php echo $item_name; ?>" style="max-width: 200px;">
+                                                    </div>
+                                                    
+                                                    <div class="item-name">
+                                                        <?php echo $item_name; ?>
+                                                        <span class="info-button" onclick="toggleDescription('item-desc-<?php echo $item_code; ?>')">i</span>
+                                                    </div>
+                                                    
+                                                    <div class="item-desc hidden-desc" id="item-desc-<?php echo $item_code; ?>">
+                                                        <?php echo $item_desc; ?>
+                                                    </div>
+                                                    
+                                                    <div class="item-total">Total: N/A</div> 
+                                                    <div class="item-available">Available: N/A</div>
+                                                    <div class="item-booked">
+                                                        This booking: 
+                                                        <input type="number" name="booked_item_<?php echo $item_code; ?>" style="width: 40px;" min="0">
+                                                    </div>
+                                                </div>
+                                        <?php
+                                            } // End of item loop
+                                        } else {
+                                            echo '<p>No items found in this category.</p>';
+                                        }
+                                        ?>
+                                        </div>
                                 </div>
-                                
-                                <div class="item-desc hidden-desc" id="item-desc-1">
-                                    Inner, flysheet, 2xlong poles, 1xshort pole, pole bag (with some), 20 x BD pegs
-                                </div>
-                                
-                                <div class="item-total">Total: 6</div>
-                                <div class="item-available">Available: 6</div>
-                                <div class="item-booked">This booking: <input type="number" style="width: 40px;" min="0"></div>
-                            </div>
+                        <?php
+                            } // End of category loop
+                        } else {
+                            echo '<p>No item categories available.</p>';
+                        }
+                        $category_result->free();
+                        ?>
                         </div>
+
+                    <div class="grid-layout-form">
+                        <button class="submit-button" type="submit">
+                            Submit Items
+                        </button>
                     </div>
                 </div>
-
-                <div class="grid-layout-form">
-                    <button class="submit-button" type="submit">
-                        Submit Items
-                    </button>
-                </div>
-            </div>
             </form>
 
     </div>
