@@ -23,6 +23,28 @@ if ($equipment_result->num_rows > 0) {
 $stmt_components = $conn->prepare("SELECT item_code, quantity, item_quality, item_location_code FROM components");
 $stmt_components->execute();
 $component_result = $stmt_components->get_result();
+$inventory_summary = [];
+if ($component_result->num_rows > 0) {
+    while ($component = $component_result->fetch_assoc()) {
+        $item_code = $component['item_code'];
+        $quantity = $component['quantity'];
+        $location_code = $component['item_location_code'];
+
+        // Initialize the array for the item_code if it doesn't exist
+        if (!isset($inventory_summary[$item_code])) {
+            $inventory_summary[$item_code] = [
+                'total' => 0,
+                'available' => 0
+            ];
+        }
+        // 1. Calculate Total: Sum up the quantity for all components of this item_code
+        $inventory_summary[$item_code]['total'] += $quantity;
+        // 2. Calculate Available: Sum up quantity only if item_location_code is NOT 'IU'
+        if ($location_code !== 'IU') {
+            $inventory_summary[$item_code]['available'] += $quantity;
+        }
+    }
+}
 
 $stmt_group = $conn->prepare("SELECT group_name, group_type FROM sections");
 $stmt_group->execute();
@@ -119,8 +141,20 @@ $group_result = $stmt_group->get_result();
                                             foreach ($grouped_equipment[$category_code] as $item) {
                                                 $item_name = htmlspecialchars($item['item_name']);
                                                 $item_desc = htmlspecialchars($item['item_desc']);
-                                                $image_path = htmlspecialchars($item['image_1']);
+                                                $image_1_value = $item['image_1'];
+                                                $image_path = '';
+                                                if ($image_1_value !== null) {
+                                                    // If 'image_1' has a non-null value, use it and secure it with htmlspecialchars
+                                                    $image_path = htmlspecialchars($image_1_value);
+                                                } else {
+                                                    // If 'image_1' is null, use the fallback file path
+                                                    $image_path = 'static\images\not-found.svg';
+                                                }
                                                 $item_code = $item['item_code'];
+
+                                                // Get the total and available counts for the current item_code
+                                                $total_count = $inventory_summary[$item_code]['total'] ?? 0;
+                                                $available_count = $inventory_summary[$item_code]['available'] ?? 0;
                                         ?>
                                                 <div class="grid-layout">
                                                     <div class="item-image">
@@ -136,11 +170,11 @@ $group_result = $stmt_group->get_result();
                                                         <?php echo $item_desc; ?>
                                                     </div>
                                                     
-                                                    <div class="item-total">Total: N/A</div> 
-                                                    <div class="item-available">Available: N/A</div>
+                                                    <div class="item-total">Total: <b><?php echo $total_count; ?></b></div> 
+                                                    <div class="item-available">Available: <b><?php echo $available_count; ?></b></div>
                                                     <div class="item-booked">
                                                         This booking: 
-                                                        <input type="number" name="booked_item_<?php echo $item_code; ?>" style="width: 40px;" min="0">
+                                                        <input type="number" name="booked_item_<?php echo $item_code; ?>" style="width: 40px;" min="0" max="<?php echo $available_count; ?>">
                                                     </div>
                                                 </div>
                                         <?php
