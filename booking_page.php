@@ -56,13 +56,13 @@ $group_result = $stmt_group->get_result();
     
     <div class="form-container">
             <h1 class="form-title" id="form_title">Booking Info</h1>
-            <form id="details-form" class="form-layout" action="booking_creation.php" method="post">
+            <form id="details-form" class="form-layout" action="#" method="post">
             <div id="info_form">
 
                 <!-- Name of Event -->
                 <div>
                     <label for="eventName-form" class="form-label">Name of Event</label>
-                    <input type="text" id="eventName" name="eventName" class="form-input" placeholder="e.g., Weekend camp at xyz" required>
+                    <input type="text" id="eventName-form" name="eventName" class="form-input" placeholder="e.g., Weekend camp at xyz" required>
                 </div><br>
 
                 <!-- Event Dates -->
@@ -148,7 +148,7 @@ $group_result = $stmt_group->get_result();
                                                     $image_path = htmlspecialchars($image_1_value);
                                                 } else {
                                                     // If 'image_1' is null, use the fallback file path
-                                                    $image_path = 'static\images\not-found.svg';
+                                                    $image_path = './static\images\not-found.svg';
                                                 }
                                                 $item_code = $item['item_code'];
 
@@ -203,6 +203,6 @@ $group_result = $stmt_group->get_result();
             </form>
 
     </div>
-    <script src="/online_quartermaster/static/js/faq_funcs.js"></script>
-    <script src="static/js/booking_funcs.js"></script>
+    <script src="./static/js/faq_funcs.js"></script>
+    <script src="./static/js/booking_funcs.js"></script>
 </div>

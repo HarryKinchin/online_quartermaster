@@ -3,11 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online QuarterMaster</title>
-    <link rel="icon" type="image/x-icon" href="/online_quartermaster/static/images/favicon.ico">
-    <link rel="apple-touch-icon" href="/online_quartermaster/static/images/apple-touch-icon.png">
-    <link rel="stylesheet" type="text/css" href="/online_quartermaster/static/css/stylings.css">
+    <link rel="icon" type="image/x-icon" href="./static/images/favicon.ico">
+    <link rel="apple-touch-icon" href="./static/images/apple-touch-icon.png">
+    <link rel="stylesheet" type="text/css" href="./static/css/stylings.css">
 </head>
 
 <body>
@@ -17,7 +17,7 @@
     <div class="top">
     <ul class="top_nav">
         <li>
-        <a href="index.php?page=home"><img src="/online_quartermaster/static/images/logo.png"></a>
+        <a href="index.php?page=home"><img src="./static/images/logo.png"></a>
         </li>
         <?php
             if (isset($_SESSION['username'])) {

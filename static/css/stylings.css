@@ -12,17 +12,17 @@ body {
 }
 
 div.bottom {
-    font-size: smaller;
+    font-size: 16px;
     text-align: center;
-    border-width: 3px;
+    border-width: 0.188rem;
     border-style: solid;
     border-color: #435354;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     position: relative;
     bottom: 0;
-    margin-left: 10px;
+    margin-left: 0.625rem;
     width: 95%;
-    height: 60px;
+    height: 3.75rem;
     padding: 1rem;
 }
 
@@ -31,14 +31,14 @@ div.top {
 }
 
 div.main {
-    margin-left: 160px;
+    margin-left: 10rem;
 }
 
 div.button_box {
     text-align: center;
     align-content: center;
     border-color: #435354;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     background-color: #d3d9d4;
     width: fit-content;
 }
@@ -51,35 +51,35 @@ h1, h2, h3, h4 {
 .error {
     color: #ff0000;
     background-color: #ffebeb;
-    border: 1px solid #ff0000;
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 5px;
+    border: 0.06rem solid #ff0000;
+    padding: 0.625rem;
+    margin-top: 0.9rem;
+    border-radius: 0.3rem;
     font-weight: bold;
     text-align: center;
 }
 
 button {
-    box-shadow: 3px 4px 0px 0px #899599;
+    box-shadow: 0.188rem 0.25rem 0rem 0rem #899599;
     background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
     background-color:#ededed;
-    border-radius:15px;
-    border:1px solid #d6bcd6;
-    display:inline-block;
-    cursor:pointer;
-    color:#3a8a9e;
-    font-family:Arial;
-    font-size:17px;
-    width: 150px;
-    margin: 10px;
-    padding:7px 25px;
-    text-decoration:none;
-    text-shadow:0px 1px 0px #e1e2ed;
+    border-radius: 0.938rem;
+    border: 0.063rem solid #d6bcd6;
+    display: inline-block;
+    cursor: pointer;
+    color: #3a8a9e;
+    font-family: Arial;
+    font-size: 1.063rem;
+    width: 9.375rem;
+    margin: 0.625rem;
+    padding: 0.438rem 1.563rem;
+    text-decoration: none;
+    text-shadow: 0px 0.063rem 0px #e1e2ed;
 }
 
 button:hover {
-	background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
-	background-color:#bab1ba;
+    background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
+    background-color:#bab1ba;
 }
 
 ul.top_nav {
@@ -88,9 +88,9 @@ ul.top_nav {
     padding: 1rem;
     overflow: hidden;
     background: #2E3944;
-    border-radius: 10px;
+    border-radius: 0.625rem;
     border-color: #2e3944;
-    border-width: 25px;
+    border-width: 1.563rem;
 }
 
 li {
@@ -101,14 +101,14 @@ li a {
     color: #d3d9d4;
     text-align: justify;
     text-justify: distribute;
-    padding: 10px;
+    padding: 0.625rem;
     text-decoration: none;
-    margin: 20px 20px;
+    margin: 1.25rem 1.25rem;
   }
 
 .sidenav {
     height: 100%;
-    width: 160px;
+    width: 10rem;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -116,13 +116,13 @@ li a {
     background: #80989C;
     background: linear-gradient(90deg, rgba(128, 152, 156, 1) 0%, rgba(128, 152, 156, 1) 90%, rgba(246, 249, 255, 1) 100%);
     overflow-x: hidden;
-    padding-top: 20px;
+    padding-top: 1.25rem;
 }
 
 .sidenav a {
-    padding: 6px 8px 6px 16px;
+    padding: 0.375rem 0.5rem 0.375rem 1rem;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 1.256rem;
     color: #000000;
     display: block;
 }
@@ -139,7 +139,7 @@ li a {
     margin-top: 2rem;
     margin-left: 25%;
     border-radius: 1rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 1.563rem 3.125 -0.75rem rgba(0, 0, 0, 0.25);
 }
 
 .form-title {
@@ -171,14 +171,14 @@ li a {
     background-color: #f9fafb;
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0.063rem 0.125rem 0 rgba(0, 0, 0, 0.05);
     transition: all 150ms ease-in-out;
 }
 
 .form-input:focus {
     outline: none;
     border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 0 0.125rem rgba(59, 130, 246, 0.5);
 }
 
 .submit-button {
@@ -187,7 +187,7 @@ li a {
     border-radius: 0.5rem;
     color: #ffffff;
     font-weight: 600;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 0.25rem 0.375rem -0.063rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.063rem rgba(0, 0, 0, 0.06);
     background-image: linear-gradient(to right, #2563eb, #1e40af);
     transition: background-image 150ms ease-in-out;
 }
@@ -198,40 +198,37 @@ li a {
 
 .submit-button:focus {
     outline: none;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6;
+    box-shadow: 0 0 0 0.125rem #ffffff, 0 0 0 0.25rem #3b82f6;
 }
 
 .accordion-header {
     background-color: #f1f1f1;
     color: #444;
     cursor: pointer;
-    padding: 18px;
+    padding: 1.125rem;
     width: 90%;
     border: none;
     text-align: left;
     outline: none;
-    font-size: 15px;
+    font-size: 0.938rem;
     transition: 0.4s;
-    margin-left: 5%;
 }
 
 .accordion-content {
-    padding: 0 18px;
+    padding: 0 1.125rem;
     background-color: white;
     max-height: 0;
     overflow: hidden;
     width: 88%;
     transition: max-height 0.2s ease-out;
-    margin-left: 5%;
-
 }
 
 .accordion-header:after {
     content: '\25B6';
-    font-size: 13px;
+    font-size: 0.813rem;
     color: #777;
     float: right;
-    margin-left: 5px;
+    margin-left: 0.313rem;
     transition: transform 0.2s;
 }
 
@@ -240,12 +237,12 @@ li a {
 }
 
 .account-container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
+    max-width: 37.5rem;
+    margin: 3.125rem auto;
+    padding: 1.25rem;
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
     color: #333;
     line-height: 1.6;
@@ -254,15 +251,15 @@ li a {
 .account-container h2 {
     text-align: center;
     color: #007bff;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
+    margin-bottom: 1.25rem;
+    border-bottom: 0.125rem solid #f0f0f0;
+    padding-bottom: 0.625rem;
 }
 
 .account-container .user-info p {
-    margin: 10px 0;
-    padding: 5px 0;
-    border-bottom: 1px dashed #e0e0e0;
+    margin: 0.625rem 0;
+    padding: 0.313rem 0;
+    border-bottom: 0.063rem dashed #e0e0e0;
 }
 
 .account-container .user-info p:last-child {
@@ -272,14 +269,14 @@ li a {
 .account-container .user-info strong {
     color: #555;
     display: inline-block;
-    width: 150px;
+    width: 9.375rem;
 }
 
 .grid-layout {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 10px;
+    gap: 0.625rem;
 }
 
 .item-image {
@@ -317,9 +314,9 @@ li a {
 
 .info-button {
     cursor: pointer;
-    margin-left: 10px;
-    padding: 2px 6px;
-    border: 1px solid #ccc;
+    margin-left: 0.625rem;
+    padding: 0.25rem 0.375rem;
+    border: 0.063rem solid #ccc;
     border-radius: 50%;
     font-weight: bold;
     font-family: Arial, sans-serif;

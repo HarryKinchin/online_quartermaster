@@ -1,4 +1,4 @@
-<div class="sidenav">
+<div class="sidenav" id="my-sidenav">
     <a href="index.php?page=home">Home</a><br>
     <?php
         if (isset($_SESSION['username'])) {

@@ -48,5 +48,5 @@
 <h1>Contact</h1><br>
 <h4>For any issues with the website or suggestions, please send me an email at <a href="mailto:h.j.kinchin@gmail.com">h.j.kinchin@gmail.com</a></h4>
 
-<script src="/online_quartermaster/static/js/faq_funcs.js"></script>
+<script src="./static/js/faq_funcs.js"></script>
 </div>
