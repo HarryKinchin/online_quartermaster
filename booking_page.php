@@ -46,10 +46,42 @@ if ($component_result->num_rows > 0) {
     }
 }
 
-$stmt_group = $conn->prepare("SELECT group_name, group_type FROM sections");
+$stmt_group = $conn->prepare("SELECT group_name, group_type FROM sections ORDER BY group_weight ASC");
 $stmt_group->execute();
 $group_result = $stmt_group->get_result();
 ?>
+<style>
+    .grid-layout-form {
+        display: flex;          /* This aligns the children horizontally */
+        gap: 15px;              /* This creates the space between the two inputs */
+        margin-bottom: 15px;    /* Adds space below the group */
+    }
+
+    .grid-layout-form > div {
+        flex: 1;                /* Forces both inputs to take up 50% width */
+        display: flex;
+        flex-direction: column; /* Keeps the Label on top of the Input */
+    }
+
+    .form-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-input {
+        width: 90%;            /* Ensures the input fills its half of the row */
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    /*Stack them vertically on small mobile screens */
+    @media (max-width: 480px) {
+        .grid-layout-form {
+            flex-direction: column;
+        }
+    }
+</style>
 
 <div class="main">
     <h1>Booking Page</h1>
@@ -69,25 +101,25 @@ $group_result = $stmt_group->get_result();
                 <div class="grid-layout-form">
                     <div>
                         <label for="eventStartDate" class="form-label">Event Start Date</label>
-                        <input type="date" id="eventStartDate" name="eventStartDate" class="form-input" min="<?php date('Y-m-d') ?>" required>
+                        <input type="date" id="eventStartDate" name="eventStartDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" required>
                     </div>
                     <div>
                         <label for="eventFinishDate" class="form-label">Event Finish Date</label>
-                        <input type="date" id="eventFinishDate" name="eventFinishDate" class="form-input" min="<?php date('Y-m-d') ?>" required>
+                        <input type="date" id="eventFinishDate" name="eventFinishDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" required>
                     </div>
-                </div><br>
+                </div>
 
                 <!-- Equipment Dates -->
                 <div class="grid-layout-form">
                     <div>
                         <label for="collectionDate" class="form-label">Collection Date</label>
-                        <input type="date" id="collectionDate" name="collectionDate" class="form-input" min="<?php date('Y-m-d') ?>" required>
+                        <input type="date" id="collectionDate" name="collectionDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" required>
                     </div>
                     <div>
                         <label for="returnDate" class="form-label">Return Date</label>
-                        <input type="date" id="returnDate" name="returnDate" class="form-input" min="<?php date('Y-m-d') ?>" required>
+                        <input type="date" id="returnDate" name="returnDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" required>
                     </div>
-                </div><br>
+                </div>
 
                 <!-- Booker Name and Group -->
                 <div class="grid-layout-form">

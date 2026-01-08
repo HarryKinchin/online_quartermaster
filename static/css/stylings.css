@@ -1,6 +1,6 @@
 body { 
     font-family: Verdana, sans-serif;  
-    font-size: 21px;
+    font-size: 16px;
     color: #000000;
     font-weight: 400;
     text-decoration: none;
@@ -132,12 +132,11 @@ li a {
 }
 
 .form-container {
-    width: 100%;
-    max-width: 48rem; 
-    background-color: #ffffff;
+    /* width: 95%; */
+    /*max-width: 48rem; */
+    background-color: #e2e2e2;
     padding: 2rem;
     margin-top: 2rem;
-    margin-left: 25%;
     border-radius: 1rem;
     box-shadow: 0 1.563rem 3.125 -0.75rem rgba(0, 0, 0, 0.25);
 }
@@ -321,4 +320,18 @@ li a {
     font-weight: bold;
     font-family: Arial, sans-serif;
     display: inline-block;
+}
+
+@media only screen and (max-width: 768px) {
+    div.main, div.bottom {
+        margin-left: 0%;
+    }
+
+    .sidenav {
+        display: none;
+    }
+
+    .form-container {
+        margin-left: 1rem;
+    }
 }

@@ -17,7 +17,7 @@
     <div class="top">
     <ul class="top_nav">
         <li>
-        <a href="index.php?page=home"><img src="./static/images/logo.png"></a>
+        <a onclick="show_hide_nav()"><img src="./static/images/menu_button.png" style="max-width: 5rem"></a>
         </li>
         <?php
             if (isset($_SESSION['username'])) {
@@ -29,3 +29,13 @@
     </div>
 </nav>
 </div>
+<script>
+    function show_hide_nav() {
+        var description = document.getElementById("my-sidenav");
+        if (description.style.display === "none" || description.style.display === "") {
+            description.style.display = "block"; // Show the sidenav
+        } else {
+            description.style.display = "none"; // Hide the sidenav
+        }
+    }
+</script>
