@@ -273,39 +273,28 @@ li a {
 
 .grid-layout {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 0.625rem;
+    gap: 0.5rem;
+    outline-width: 2px;
+    outline-style: outset;
+    outline-color: #868d97;
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+    padding-bottom: 0.5%;
 }
 
-.item-image {
-    grid-row: span 3 / span 3;
-}
+.item-image { grid-area: 1 / 1 / 4 / 3; place-self: center stretch; justify-self: stretch;}
 
-.item-name {
-    grid-column: span 3 / span 3;
-}
+.item-name { grid-area: 1 / 3 / 2 / 7; place-self: center stretch; justify-self: stretch;}
 
-.item-desc {
-    grid-column: span 3 / span 3;
-    grid-column-start: 2;
-    grid-row-start: 2;
-}
+.item-desc { grid-area: 2 / 3 / 3 / 7; place-self: center stretch; justify-self: stretch;}
 
-.item-total {
-    grid-column-start: 2;
-    grid-row-start: 3;
-}
+.item-total { grid-area: 3 / 3 / 4 / 4; place-self: center stretch; justify-self: stretch;}
 
-.item-available {
-    grid-column-start: 3;
-    grid-row-start: 3;
-}
+.item-available { grid-area: 3 / 4 / 4 / 5; place-self: center stretch; justify-self: stretch;}
 
-.item-booked {
-    grid-column-start: 4;
-    grid-row-start: 3;
-}
+.item-booked {grid-area: 3 / 5 / 4 / 6; place-self: center stretch; justify-self: stretch;}
 
 .hidden-desc {
     display: none;
@@ -333,5 +322,9 @@ li a {
 
     .form-container {
         margin-left: 1rem;
+    }
+
+    .item-image {
+        display: none;
     }
 }

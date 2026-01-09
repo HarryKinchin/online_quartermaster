@@ -84,10 +84,8 @@ $group_result = $stmt_group->get_result();
 </style>
 
 <div class="main">
-    <h1>Booking Page</h1>
-    
     <div class="form-container">
-            <h1 class="form-title" id="form_title">Booking Info</h1>
+            <h1 class="form-title" id="info_title">Booking Info</h1>
             <form id="details-form" class="form-layout" action="#" method="post">
             <div id="info_form">
 
@@ -151,7 +149,7 @@ $group_result = $stmt_group->get_result();
                 </div>
             </div>
             </form>
-
+            <h1 class="form-title" id="items_title">Booking Items</h1>
             <form id="items-form" class="form-layout" action="#" method="post">
                 <div id="item_form" style="display: block;">
                     <div>
@@ -190,7 +188,7 @@ $group_result = $stmt_group->get_result();
                                         ?>
                                                 <div class="grid-layout">
                                                     <div class="item-image">
-                                                        <img src="<?php echo $image_path; ?>" alt="<?php echo $item_name; ?>" style="max-width: 200px;">
+                                                        <img src="<?php echo $image_path; ?>" alt="<?php echo $item_name; ?>" style="max-width: 100%; height: auto;">
                                                     </div>
                                                     
                                                     <div class="item-name">
@@ -205,8 +203,15 @@ $group_result = $stmt_group->get_result();
                                                     <div class="item-total">Total: <b><?php echo $total_count; ?></b></div> 
                                                     <div class="item-available">Available: <b><?php echo $available_count; ?></b></div>
                                                     <div class="item-booked">
-                                                        This booking: 
-                                                        <input type="number" name="booked_item_<?php echo $item_code; ?>" style="width: 40px;" min="0" max="<?php echo $available_count; ?>">
+                                                        This booking:
+                                                        <?php
+                                                        // If there are no items available, the booking amount selector will be disabled
+                                                        if ($available_count == 0) {
+                                                            echo '<input type="number" name="booked_item_', $item_code, '" style="width: 40px;" disabled>';
+                                                        } else {
+                                                            echo '<input type="number" name="booked_item_', $item_code, '" style="width: 40px;" min="0" max="', $available_count, '">';
+                                                        }
+                                                        ?>
                                                     </div>
                                                 </div>
                                         <?php
