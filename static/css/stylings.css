@@ -294,7 +294,7 @@ li a {
 
 .item-available { grid-area: 3 / 4 / 4 / 5; place-self: center stretch; justify-self: stretch;}
 
-.item-booked {grid-area: 3 / 5 / 4 / 6; place-self: center stretch; justify-self: stretch;}
+.item-booked {grid-area: 3 / 5 / 4 / 7; place-self: center stretch; justify-self: stretch;}
 
 .hidden-desc {
     display: none;

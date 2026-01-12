@@ -35,7 +35,11 @@ switch ($page) {
         break;
     case "store_details":
         $page_group = "store_details";
-        include_once("store_details.php");
+        include_once("under_construction.php");
+        break;
+    case "reports":
+        $page_group = "reports";
+        include_once("under_construction.php");
         break;
     default:
         $page_group = "main";

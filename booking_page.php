@@ -188,7 +188,7 @@ $group_result = $stmt_group->get_result();
                                         ?>
                                                 <div class="grid-layout">
                                                     <div class="item-image">
-                                                        <img src="<?php echo $image_path; ?>" alt="<?php echo $item_name; ?>" style="max-width: 100%; height: auto;">
+                                                        <img src="<?php echo $image_path; ?>" alt="<?php echo $item_name; ?>" style="max-width: 80%; height: auto;">
                                                     </div>
                                                     
                                                     <div class="item-name">
