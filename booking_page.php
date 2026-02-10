@@ -74,19 +74,12 @@ $group_result = $stmt_group->get_result();
         border: 1px solid #ccc;
         border-radius: 4px;
     }
-
-    /*Stack them vertically on small mobile screens */
-    @media (max-width: 480px) {
-        .grid-layout-form {
-            flex-direction: column;
-        }
-    }
 </style>
 
 <div class="main">
     <div class="form-container">
             <h1 class="form-title" id="info_title">Booking Info</h1>
-            <form id="details-form" class="form-layout" action="#" method="post">
+            <form id="details-form" class="form-layout" action="index.php?page=create_booking" method="post">
             <div id="info_form">
 
                 <!-- Name of Event -->
@@ -161,7 +154,7 @@ $group_result = $stmt_group->get_result();
                         ?>
                                 <div class="accordian-item">
                                     <button class="accordion-header" type="button">
-                                        <h4><?php echo $category_name; ?></h4>
+                                        <?php echo $category_name; ?>
                                     </button>
                                     <div class="accordion-content">
                                         <?php
@@ -201,15 +194,15 @@ $group_result = $stmt_group->get_result();
                                                     </div>
                                                     
                                                     <div class="item-total">Total: <b><?php echo $total_count; ?></b></div> 
-                                                    <div class="item-available">Available: <b><?php echo $available_count; ?></b></div>
+                                                    <div class="item-available">Free: <b><?php echo $available_count; ?></b></div>
                                                     <div class="item-booked">
-                                                        This booking:
+                                                        This:
                                                         <?php
                                                         // If there are no items available, the booking amount selector will be disabled
                                                         if ($available_count == 0) {
                                                             echo '<input type="number" name="booked_item_', $item_code, '" style="width: 40px;" disabled>';
                                                         } else {
-                                                            echo '<input type="number" name="booked_item_', $item_code, '" style="width: 40px;" min="0" max="', $available_count, '">';
+                                                            echo '<input type="number" name="booked_item_', $item_code, '" class="form-input" style="width: 40px;" min="0" max="', $available_count, '">';
                                                         }
                                                         ?>
                                                     </div>
@@ -242,4 +235,5 @@ $group_result = $stmt_group->get_result();
     </div>
     <script src="./static/js/faq_funcs.js"></script>
     <script src="./static/js/booking_funcs.js"></script>
+    <script src="./static/js/formchanges.js"></script>
 </div>

@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         header("Location: index.php?page=booking");
-        echo "<script type=text/javascript src='static/js/booking_funcs.js'>get_items();</script>";
+        echo "Booking created";
         exit();
     } else {
         error_log("Database error during booking: " . $stmt->error);

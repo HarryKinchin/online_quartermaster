@@ -20,8 +20,6 @@ div.bottom {
     border-radius: 0.625rem;
     position: relative;
     bottom: 0;
-    margin-left: 0.625rem;
-    width: 95%;
     height: 3.75rem;
     padding: 1rem;
 }
@@ -84,7 +82,6 @@ button:hover {
 
 ul.top_nav {
     list-style-type: none;
-    margin: 1rem;
     padding: 1rem;
     overflow: hidden;
     background: #2E3944;
@@ -101,9 +98,7 @@ li a {
     color: #d3d9d4;
     text-align: justify;
     text-justify: distribute;
-    padding: 0.625rem;
     text-decoration: none;
-    margin: 1.25rem 1.25rem;
   }
 
 .sidenav {
@@ -135,8 +130,7 @@ li a {
     /* width: 95%; */
     /*max-width: 48rem; */
     background-color: #e2e2e2;
-    padding: 2rem;
-    margin-top: 2rem;
+    padding: 1rem;
     border-radius: 1rem;
     box-shadow: 0 1.563rem 3.125 -0.75rem rgba(0, 0, 0, 0.25);
 }
@@ -204,7 +198,6 @@ li a {
     background-color: #f1f1f1;
     color: #444;
     cursor: pointer;
-    padding: 1.125rem;
     width: 90%;
     border: none;
     text-align: left;
@@ -320,11 +313,35 @@ li a {
         display: none;
     }
 
-    .form-container {
-        margin-left: 1rem;
-    }
-
     .item-image {
         display: none;
     }
+
+    .grid-layout {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 0.5rem;
+        outline-width: 2px;
+        outline-style: outset;
+        outline-color: #868d97;
+        margin-top: 0.5%;
+        margin-bottom: 0.5%;
+        padding-bottom: 0.5%;
+    }
+
+    .item-name { grid-area: 1 / 1 / 2 / 4; place-self: center stretch; justify-self: stretch;}
+
+    .item-desc { grid-area: 2 / 1 / 3 / 4; place-self: center stretch; justify-self: stretch;}
+
+    .item-total { grid-area: 3 / 1 / 4 / 2; place-self: center stretch; justify-self: stretch;}
+
+    .item-available { grid-area: 3 / 2 / 4 / 3; place-self: center stretch; justify-self: stretch;}
+
+    .item-booked {grid-area: 3 / 3 / 4 / 4; place-self: center stretch; justify-self: stretch;}
+}
+
+
+.updated{
+    border: 1px solid lightgreen !important;
 }

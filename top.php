@@ -17,11 +17,11 @@
     <div class="top">
     <ul class="top_nav">
         <li>
-        <a onclick="show_hide_nav()"><img src="./static/images/menu_button.png" style="max-width: 5rem"></a>
+        <a onclick="show_hide_nav()"><img src="./static/images/menus.png" style="max-width: 5rem" title="https://www.flaticon.com/free-icons/hamburger Hamburger icons created by See Icons - Flaticon"></a>
         </li>
         <?php
             if (isset($_SESSION['username'])) {
-                echo '<li style="float: right;"><a href=index.php?page=account>' . htmlspecialchars(string: $_SESSION['username']) . '</a></li>';
+                echo '<li style="float: right;"><a href=index.php?page=account>' . htmlspecialchars(string: $_SESSION['username']) . '</a></li><br>';
                 echo '<li style="float: right;"><a href="logout.php">Logout</a></li>';
             }
         ?>
