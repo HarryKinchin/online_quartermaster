@@ -36,40 +36,34 @@ if(isset($process)){
 
     switch ($page) {
         case "home":
-            $page_group = "main";
             include_once("home.php");
             break;
         case "create_booking":
-            $page_group = "bookings";
             include_once("booking_creation.php");
             include_once("booking_page.php");
             break;
         case "booking":
-            $page_group = "bookings";
             include_once("booking_page.php");
             break;
         case "bookings":
-            $page_group = "bookings";
             include_once("bookings.php");
             break;
         case "faq_contact":
-            $page_group = "faq_contacts";
             include_once("faq_contact.php");
             break;
         case "login":
-            $page_group = "login_page";
             include_once("login.php");
             break;
         case "account":
-            $page_group ="account_page";
             include_once("account.php");
             break;
         case "store_details":
-            $page_group = "store_details";
+            include_once("under_construction.php");
+            break;
+        case "reports":
             include_once("under_construction.php");
             break;
         default:
-            $page_group = "main";
             include_once("home.php");
             break;
     }

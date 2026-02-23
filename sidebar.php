@@ -12,6 +12,5 @@
     <a href="index.php?page=bookings">View Bookings</a><br>
     <a href="index.php?page=store_details">Store Details</a><br>
     <a href="index.php?page=reports">Reports</a><br>
-    <a href="index.php?page=faq_contact">F.A.Q</a><br>
-    <a href="index.php?page=faq_contact">Contact</a><br>
+    <a href="index.php?page=faq_contact">F.A.Q & Contact</a><br>
 </div>

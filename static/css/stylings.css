@@ -207,11 +207,10 @@ li a {
 }
 
 .accordion-content {
-    padding: 0 1.125rem;
+    padding: 0 0.125rem;
     background-color: white;
     max-height: 0;
     overflow: hidden;
-    width: 88%;
     transition: max-height 0.2s ease-out;
 }
 
