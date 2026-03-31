@@ -49,6 +49,36 @@ if ($component_result->num_rows > 0) {
 $stmt_group = $conn->prepare("SELECT group_name, group_type FROM sections ORDER BY group_weight ASC");
 $stmt_group->execute();
 $group_result = $stmt_group->get_result();
+
+// Check if we are editing an existing booking
+$booking_id = $_GET['bookingID'] ?? null;
+$existing_booking = null;
+
+if ($booking_id) {
+    $stmt_load = $conn->prepare("SELECT * FROM bookings WHERE booking_id = ?");
+    $stmt_load->bind_param("i", $booking_id);
+    $stmt_load->execute();
+    $existing_booking = $stmt_load->get_result()->fetch_assoc();
+}
+
+$saved_items = [];
+if ($booking_id) {
+    // Fetch items already added to this booking
+    $stmt_items = $conn->prepare("SELECT item_code, quantity_needed FROM booking_items WHERE booking_id = ?");
+    $stmt_items->bind_param("i", $booking_id);
+    $stmt_items->execute();
+    $saved_items_result = $stmt_items->get_result();
+    
+    while ($row = $saved_items_result->fetch_assoc()) {
+        // Create a key-value pair: [ 'ITEM001' => 5 ]
+        $saved_items[$row['item_code']] = $row['quantity_needed'];
+    }
+};
+
+// Logic to determine visibility
+$info_display = "block";
+$items_display = $booking_id ? "block" : "none";
+$form_action = $booking_id ? "#" : "booking_creation.php"; // Change action if editing
 ?>
 <style>
     .grid-layout-form {
@@ -77,26 +107,27 @@ $group_result = $stmt_group->get_result();
 </style>
 
 <div class="main">
+    <input type="hidden" id="booking_id" value="<?php echo $booking_id; ?>">
     <div class="form-container">
             <h1 class="form-title" id="info_title">Booking Info</h1>
-            <form id="details-form" class="form-layout" action="index.php?page=create_booking" method="post">
+            <form id="details-form" class="form-layout" action="<?php echo $form_action; ?>" method="post">
             <div id="info_form">
 
                 <!-- Name of Event -->
                 <div>
                     <label for="eventName-form" class="form-label">Name of Event</label>
-                    <input type="text" id="eventName-form" name="eventName" class="form-input" placeholder="e.g., Weekend camp at xyz" required>
+                    <input type="text" id="eventName-form" name="eventName" class="form-input" value="<?php echo htmlspecialchars($existing_booking['event_name'] ?? ''); ?>" required>
                 </div><br>
 
                 <!-- Event Dates -->
                 <div class="grid-layout-form">
                     <div>
                         <label for="eventStartDate" class="form-label">Event Start Date</label>
-                        <input type="date" id="eventStartDate" name="eventStartDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" required>
+                        <input type="date" id="eventStartDate" name="eventStartDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($existing_booking['event_start'] ?? ''); ?>" required>
                     </div>
                     <div>
                         <label for="eventFinishDate" class="form-label">Event Finish Date</label>
-                        <input type="date" id="eventFinishDate" name="eventFinishDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" required>
+                        <input type="date" id="eventFinishDate" name="eventFinishDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($existing_booking['event_end'] ?? ''); ?>" required>
                     </div>
                 </div>
 
@@ -104,11 +135,11 @@ $group_result = $stmt_group->get_result();
                 <div class="grid-layout-form">
                     <div>
                         <label for="collectionDate" class="form-label">Collection Date</label>
-                        <input type="date" id="collectionDate" name="collectionDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" required>
+                        <input type="date" id="collectionDate" name="collectionDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($existing_booking['collection_date'] ?? ''); ?>" required>
                     </div>
                     <div>
                         <label for="returnDate" class="form-label">Return Date</label>
-                        <input type="date" id="returnDate" name="returnDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" required>
+                        <input type="date" id="returnDate" name="returnDate" class="form-input" min="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($existing_booking['return_date'] ?? ''); ?>" required>
                     </div>
                 </div>
 
@@ -121,15 +152,18 @@ $group_result = $stmt_group->get_result();
                     <div>
                         <label for="group" class="form-label">For</label>
                         <select id="group" name="group" class="form-input" required>
-                            <option value="" disabled selected>Select a group</option>
+                            <option value="" disabled <?php echo !isset($existing_booking['group_name']) ? 'selected' : ''; ?>>Select a section / end use</option>
                             <?php
                                 while ($row = $group_result->fetch_assoc()) {
                                     $groupName = htmlspecialchars($row['group_name']);
                                     $groupType = htmlspecialchars($row['group_type']);
                                     $displayValue = $groupName . ' ' . $groupType;
-                                    echo "<option value=\"$groupName\">$displayValue</option>";
+                                    
+                                    // ADDED: Check if this option matches the saved group_name
+                                    $selected = ($existing_booking['group_name'] == $groupName) ? 'selected' : '';
+                                    
+                                    echo "<option value=\"$groupName\" $selected>$displayValue</option>";
                                 }
-                                $stmt_group->close();
                             ?>
                         </select>
                     </div>
@@ -142,8 +176,8 @@ $group_result = $stmt_group->get_result();
                 </div>
             </div>
             </form>
-            <h1 class="form-title" id="items_title">Booking Items</h1>
-            <form id="items-form" class="form-layout" action="#" method="post">
+            <h1 class="form-title" id="items_title" style="display: <?php echo $items_display; ?>">Booking Items</h1>
+            <form id="items-form" class="form-layout" action="#" method="post" style="display: <?php echo $items_display; ?>">
                 <div id="item_form" style="display: block;">
                     <div>
                         <?php
@@ -198,11 +232,20 @@ $group_result = $stmt_group->get_result();
                                                     <div class="item-booked">
                                                         This:
                                                         <?php
+                                                        // Determine the value to display (default to empty/0 if not found)
+                                                        $current_qty = isset($saved_items[$item_code]) ? $saved_items[$item_code] : '';
+
                                                         // If there are no items available, the booking amount selector will be disabled
-                                                        if ($available_count == 0) {
+                                                        if ($available_count == 0 && $current_qty <= 0) {
                                                             echo '<input type="number" name="booked_item_', $item_code, '" style="width: 40px;" disabled>';
                                                         } else {
-                                                            echo '<input type="number" name="booked_item_', $item_code, '" class="form-input" style="width: 40px;" min="0" max="', $available_count, '">';
+                                                            echo '<input type="number" 
+                                                                        name="booked_item_', $item_code, '" 
+                                                                        class="form-input" 
+                                                                        style="width: 40px;" 
+                                                                        min="0" 
+                                                                        max="', ($available_count + (int)$current_qty), '" 
+                                                                        value="', $current_qty, '">';
                                                         }
                                                         ?>
                                                     </div>
@@ -223,12 +266,6 @@ $group_result = $stmt_group->get_result();
                         $category_result->free();
                         ?>
                         </div>
-
-                    <div class="grid-layout-form">
-                        <button class="submit-button" type="submit">
-                            Submit Items
-                        </button>
-                    </div>
                 </div>
             </form>
 
