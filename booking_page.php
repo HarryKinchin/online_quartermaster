@@ -157,7 +157,11 @@ $form_action = $booking_id ? "#" : "booking_creation.php"; // Change action if e
                                 while ($row = $group_result->fetch_assoc()) {
                                     $groupName = htmlspecialchars($row['group_name']);
                                     $groupType = htmlspecialchars($row['group_type']);
-                                    $displayValue = $groupName . ' ' . $groupType;
+                                    if($groupName == $groupType){
+                                        $displayValue = $groupName;
+                                    } else {
+                                        $displayValue = $groupName . ' ' . $groupType;
+                                    }
                                     
                                     // ADDED: Check if this option matches the saved group_name
                                     $selected = ($existing_booking['group_name'] == $groupName) ? 'selected' : '';
@@ -171,7 +175,7 @@ $form_action = $booking_id ? "#" : "booking_creation.php"; // Change action if e
 
                 <div class="grid-layout-form">
                     <button class="submit-button" type="submit" onclick="get_items()">
-                        Submit Booking Details
+                        Create Booking
                     </button>
                 </div>
             </div>
@@ -237,12 +241,11 @@ $form_action = $booking_id ? "#" : "booking_creation.php"; // Change action if e
 
                                                         // If there are no items available, the booking amount selector will be disabled
                                                         if ($available_count == 0 && $current_qty <= 0) {
-                                                            echo '<input type="number" name="booked_item_', $item_code, '" style="width: 40px;" disabled>';
+                                                            echo '<input type="number" class="booked_item" name="booked_item_', $item_code, '" disabled>';
                                                         } else {
                                                             echo '<input type="number" 
                                                                         name="booked_item_', $item_code, '" 
-                                                                        class="form-input" 
-                                                                        style="width: 40px;" 
+                                                                        class="booked_item"
                                                                         min="0" 
                                                                         max="', ($available_count + (int)$current_qty), '" 
                                                                         value="', $current_qty, '">';
