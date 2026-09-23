@@ -32,42 +32,6 @@ $error_message = '';
 $action = $_POST['action'] ?? '';
 $current_user_id = (int) ($_SESSION['user_id'] ?? 0);
 
-// Handle add single unit
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'add_unit') {
-    $location_code = trim($_POST['location_code'] ?? '');
-    $replacement_cost = trim($_POST['replacement_cost'] ?? '');
-    $date_purchased = trim($_POST['date_purchased'] ?? '');
-    $end_of_life = trim($_POST['end_of_life'] ?? '');
-    
-    if (empty($location_code)) {
-        $error_message = "Location is required.";
-    } else {
-        // Generate unique component code
-        $prefix = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $item_code), 0, 6));
-        $prefix = $prefix !== '' ? $prefix : 'ITEM';
-        
-        for ($attempt = 0; $attempt < 10; $attempt++) {
-            $component_code = $prefix . str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
-            
-            $stmt = $conn->prepare("INSERT INTO components (component_code, item_code, quantity, item_quality, quality_desc, replacement_cost, date_purchased, end_of_life, item_location_code) VALUES (?, ?, 1, '1', 'Good', NULLIF(?, ''), NULLIF(?, ''), NULLIF(?, ''), ?)");
-            $stmt->bind_param("ssssss", $component_code, $item_code, $replacement_cost, $date_purchased, $end_of_life, $location_code);
-            
-            if ($stmt->execute()) {
-                $success_message = "Unit added successfully with code: " . htmlspecialchars($component_code);
-                $stmt->close();
-                break;
-            }
-            
-            if ($stmt->errno !== 1062) {
-                $error_message = "Failed to add unit.";
-                $stmt->close();
-                break;
-            }
-            $stmt->close();
-        }
-    }
-}
-
 // Handle add bulk units
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'add_bulk') {
     $bulk_quantity = filter_var($_POST['bulk_quantity'] ?? 0, FILTER_VALIDATE_INT);
@@ -358,11 +322,14 @@ if ($maintenance_table_check && $maintenance_table_check->num_rows > 0) {
         <div style="background-color: #e2e2e2; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
             <h3 style="margin-top: 0;">Add New Units</h3>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <!-- Add Single Unit -->
-                <form method="POST" class="form-layout">
-                    <h4 style="text-align: left;">Add Single Unit</h4>
-                    <input type="hidden" name="action" value="add_unit">
+            <form method="POST" class="form-layout">
+                    <h4 style="text-align: left;">Add Units</h4>
+                    <input type="hidden" name="action" value="add_bulk">
+                    
+                    <div>
+                        <label class="form-label">How many units? *</label>
+                        <input type="number" name="bulk_quantity" class="form-input" min="1" value="1" required>
+                    </div>
                     
                     <div>
                         <label class="form-label">Location *</label>
@@ -388,53 +355,14 @@ if ($maintenance_table_check && $maintenance_table_check->num_rows > 0) {
                         <label class="form-label">Date Purchased</label>
                         <input type="date" name="date_purchased" class="form-input">
                     </div>
-                    
+
                     <div>
                         <label class="form-label">End of Life Date</label>
                         <input type="date" name="end_of_life" class="form-input">
                     </div>
                     
-                    <button type="submit" style="width: 100%; margin-top: 1rem;">➕ Add 1 Unit</button>
+                    <button type="submit" style="width: 100%; margin-top: 1rem;">➕ Add Units</button>
                 </form>
-                
-                <!-- Add Bulk Units -->
-                <form method="POST" class="form-layout">
-                    <h4 style="text-align: left;">Add Multiple Units</h4>
-                    <input type="hidden" name="action" value="add_bulk">
-                    
-                    <div>
-                        <label class="form-label">How many units? *</label>
-                        <input type="number" name="bulk_quantity" class="form-input" min="1" value="5" required>
-                    </div>
-                    
-                    <div>
-                        <label class="form-label">Location *</label>
-                        <select name="location_code" class="form-input" required>
-                            <option value="">Select location</option>
-                            <?php 
-                            $locations_result->data_seek(0);
-                            while ($loc = $locations_result->fetch_assoc()): 
-                            ?>
-                                <option value="<?php echo htmlspecialchars($loc['location_code']); ?>">
-                                    <?php echo htmlspecialchars($loc['location_name']); ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="form-label">Replacement Cost (£)</label>
-                        <input type="number" name="replacement_cost" class="form-input" step="0.01" placeholder="e.g., 49.99">
-                    </div>
-                    
-                    <div>
-                        <label class="form-label">Date Purchased</label>
-                        <input type="date" name="date_purchased" class="form-input">
-                    </div>
-                    
-                    <button type="submit" style="width: 100%; margin-top: 1rem;">➕ Add Multiple Units</button>
-                </form>
-            </div>
         </div>
         
         <!-- Components Table -->
