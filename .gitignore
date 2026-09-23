@@ -1,0 +1,40 @@
+# Environment files and unnecessary files
+.env
+.env.*
+!.env.example
+migrate_components.php
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor and IDE files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# Logs and runtime output
+*.log
+error_log
+
+# Temporary and backup files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+~$*
+
+# PHP/package manager artifacts
+vendor/
+composer.lock
+
+# Local database exports and backups
+scout_bookings/scout_bookings_data.sql
+static/images/item_images*
+*.sql.bak
+*.dump
+*.sqlite
+*.sqlite3

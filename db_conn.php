@@ -25,6 +25,11 @@ if (is_readable($env_file)) {
   }
 }
 
+// .env file values take precedence over any stale real environment variables
+foreach ($env_values as $env_key => $env_value) {
+  putenv("$env_key=$env_value");
+}
+
 $servername = getenv('QM_DB_HOST');
 $servername = $servername !== false && $servername !== '' ? $servername : (isset($env_values['QM_DB_HOST']) ? $env_values['QM_DB_HOST'] : 'localhost');
 $username = getenv('QM_DB_USER');
