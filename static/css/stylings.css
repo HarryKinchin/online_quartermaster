@@ -20,12 +20,17 @@ div.bottom {
     border-radius: 0.625rem;
     position: relative;
     bottom: 0;
-    height: 3.75rem;
     padding: 1rem;
 }
 
 div.main {
     margin-left: 16rem;
+}
+
+.faq-page {
+    width: auto;
+    box-sizing: border-box;
+    padding: 0 1.5rem 2rem;
 }
 
 .topbar {
@@ -360,27 +365,42 @@ h1, h2, h3, h4 {
     text-align: center;
 }
 
-button {
-    box-shadow: 0.188rem 0.25rem 0rem 0rem #899599;
-    background:linear-gradient(to bottom, #ededed 5%, #bab1ba 100%);
-    background-color:#ededed;
-    border-radius: 0.938rem;
-    border: 0.063rem solid #d6bcd6;
+button:not(.menu-toggle):not(.close-modal),
+.edit-button,
+.create-account-btn {
+    background: #17324d !important;
+    background-image: none !important;
+    border: 1px solid rgba(99, 199, 183, 0.55) !important;
+    border-radius: 0.8rem !important;
+    box-shadow: none !important;
     display: inline-block;
     cursor: pointer;
-    color: #3a8a9e;
-    font-family: Arial;
+    color: #ffffff !important;
+    font-family: inherit;
     font-size: 1.063rem;
-    width: 9.375rem;
     margin: 0.625rem;
     padding: 0.438rem 1.563rem;
     text-decoration: none;
-    text-shadow: 0px 0.063rem 0px #e1e2ed;
+    text-shadow: none;
+    font-weight: 600;
+    transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease, color 150ms ease;
 }
 
-button:hover {
-    background:linear-gradient(to bottom, #bab1ba 5%, #ededed 100%);
-    background-color:#bab1ba;
+button:not(.menu-toggle):not(.close-modal):hover,
+.edit-button:hover,
+.create-account-btn:hover {
+    background: rgba(15, 118, 110, 0.95) !important;
+    border-color: #63c7b7 !important;
+    box-shadow: inset 0.2rem 0 0 #63c7b7, 0 0.35rem 0.8rem rgba(15, 23, 42, 0.16) !important;
+    color: #ffffff !important;
+    transform: translateX(0.2rem);
+}
+
+button:not(.menu-toggle):not(.close-modal):focus-visible,
+.edit-button:focus-visible,
+.create-account-btn:focus-visible {
+    outline: 2px solid #63c7b7;
+    outline-offset: 2px;
 }
 
 .sidenav {
@@ -563,48 +583,44 @@ button:hover {
 .submit-button {
     width: 90%;
     padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    color: #ffffff;
-    font-weight: 600;
-    box-shadow: 0 0.25rem 0.375rem -0.063rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.063rem rgba(0, 0, 0, 0.06);
-    background-image: linear-gradient(to right, #2563eb, #1e40af);
-    transition: background-image 150ms ease-in-out;
-}
-
-.submit-button:hover {
-    background-image: linear-gradient(to right, #1d4ed8, #1e3a8a);
-}
-
-.submit-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 0.125rem #ffffff, 0 0 0 0.25rem #3b82f6;
 }
 
 .delete-button {
     width: 90%;
     padding: 0.75rem 1rem;
-    border: 1px solid #b91c1c;
-    border-radius: 0.5rem;
-    background-color: #dc2626;
-    color: #ffffff;
-    font-weight: 600;
     cursor: pointer;
-}
-
-.delete-button:hover {
-    background-color: #b91c1c;
 }
 
 .accordion-header {
-    background-color: #f1f1f1;
-    color: #444;
     cursor: pointer;
     width: 90%;
-    border: none;
     text-align: left;
     outline: none;
     font-size: 0.938rem;
     transition: 0.4s;
+}
+
+.accordion,
+.accordion-item {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.accordion .accordion-header {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.accordion .accordion-header h4 {
+    flex: 1;
+    margin: 0;
+    color: #ffffff;
+    text-align: left;
 }
 
 .accordion-content {
@@ -904,11 +920,16 @@ button:hover {
 .reports-filters button {
     align-self: end;
     width: 100%;
+    min-width: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .reports-action {
     align-self: end;
     width: 100%;
+    min-width: 0;
+    margin: 0;
     box-sizing: border-box;
     text-align: center;
     text-decoration: none;
@@ -1436,22 +1457,6 @@ button:hover {
     white-space: nowrap;
 }
 
-.edit-booking {
-    background-color: #2563eb;
-}
-
-.edit-booking:hover {
-    background-color: #1e40af;
-}
-
-.status-button {
-    background-color: #10b981;
-}
-
-.status-button:hover {
-    background-color: #047857;
-}
-
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -1495,16 +1500,6 @@ button:hover {
     border: none;
     font-weight: 600;
     cursor: pointer;
-}
-
-.modal-actions .cancel-button {
-    background: #e5e7eb;
-    color: #111827;
-}
-
-.modal-actions .save-button {
-    background: #2563eb;
-    color: white;
 }
 
 @media (max-width: 600px) {
@@ -1666,21 +1661,24 @@ button:hover {
 .edit-button {
     display: inline-block;
     padding: 0.65rem 1rem;
-    border-radius: 0.75rem;
-    background-color: #2563eb;
-    color: #ffffff;
     text-decoration: none;
-    font-weight: 600;
-    transition: background-color 150ms ease;
 }
 
-.edit-button:hover {
-    background-color: #1d4ed8;
+.close-modal {
+    color: #17324d;
+}
+
+.close-modal:hover {
+    color: #0f766e;
 }
 
 @media only screen and (max-width: 768px) {
     div.main, div.bottom {
         margin-left: 0%;
+    }
+
+    .faq-page {
+        padding: 0 0.75rem 2rem;
     }
 
     .topbar {

@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } else {
             $error_message = "You don't have permission to delete accounts.";
         }
-    } elseif ($action === 'reset_password' && $user_id > 0 && $user_id !== $_SESSION['user_id']) {
+    } elseif ($action === 'reset_password' && $user_id > 0) {
         // Send password reset email
         // Get user email
         $stmt = $conn->prepare("SELECT email, first_name, last_name FROM users WHERE user_id = ?");
@@ -160,24 +160,24 @@ $stmt->close();
                                 <?php echo date('M d, Y', strtotime($user['creation_date'])); ?>
                             </td>
                             <td style="padding: 0.75rem 1rem; border: 1px solid #d1d5db; text-align: center;">
-                                <a href="index.php?page=edit_user&user_id=<?php echo $user['user_id']; ?>" style="color: #3a8a9e; text-decoration: none; margin-right: 0.5rem;">
+                                <a class="edit-button account-action" href="index.php?page=edit_user&user_id=<?php echo $user['user_id']; ?>">
                                     ✏️ Edit
                                 </a>
                                 
+                                <form method="POST" style="display: inline;" onsubmit="return confirm('Send password reset email to <?php echo htmlspecialchars($user['first_name']); ?>?');">
+                                    <input type="hidden" name="action" value="reset_password">
+                                    <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
+                                    <button type="submit" class="account-action">
+                                        📧 Reset
+                                    </button>
+                                </form>
+
                                 <?php if ($user['user_id'] !== $_SESSION['user_id']): ?>
-                                    <form method="POST" style="display: inline;" onsubmit="return confirm('Send password reset email to <?php echo htmlspecialchars($user['first_name']); ?>?');">
-                                        <input type="hidden" name="action" value="reset_password">
-                                        <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
-                                        <button type="submit" style="background-color: #4a90e2; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.875rem; margin-left: 0.25rem;">
-                                            📧 Reset
-                                        </button>
-                                    </form>
-                                    
                                     <?php if ($is_admin): ?>
                                         <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this account? This cannot be undone.');">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
-                                            <button type="submit" style="background-color: #ff4444; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.875rem; margin-left: 0.25rem;">
+                                            <button type="submit" class="account-action">
                                                 🗑️ Delete
                                             </button>
                                         </form>
@@ -205,6 +205,14 @@ $stmt->close();
         font-weight: bold;
         text-align: center;
     }
+
+    .account-action {
+        width: auto;
+        min-width: 0;
+        margin: 0 0.25rem 0 0;
+        padding: 0.25rem 0.75rem;
+        vertical-align: middle;
+    }
     
     table a {
         transition: opacity 0.2s;
@@ -214,21 +222,11 @@ $stmt->close();
         opacity: 0.7;
     }
     
-    button {
-        transition: background-color 0.2s;
-    }
-    
-    button:hover {
-        background-color: #cc0000 !important;
-    }
-    
     .create-account-btn {
-        transition: all 0.2s ease !important;
+        transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease, color 150ms ease !important;
     }
     
     .create-account-btn:hover {
-        background: linear-gradient(to bottom, #bab1ba 5%, #ededed 100%) !important;
-        background-color: #bab1ba !important;
-        box-shadow: 0.188rem 0.25rem 0rem 0rem #899599, 0 0 0.5rem rgba(58, 138, 158, 0.3) !important;
+        background: rgba(15, 118, 110, 0.95) !important;
     }
 </style>
