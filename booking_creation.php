@@ -17,17 +17,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Missing required information.");
     }
 
+    if (strtotime($eventStartDate) > strtotime($eventFinishDate)) {
+        die("Event start date must be before or on the event end date.");
+    }
+
+    if (strtotime($collectionDate) > strtotime($eventStartDate)) {
+        die("Collection date must be before or on the event start date.");
+    }
+
+    if (strtotime($returnDate) < strtotime($eventFinishDate)) {
+        die("Event end date must be before or on the return date.");
+    }
+
     $sql = "INSERT INTO `bookings` (`user_id`, `event_name`, `event_start`, `event_end`, `collection_date`, `return_date`, `group_name`) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt_new_booking = $conn->prepare($sql);
     $stmt_new_booking->bind_param("issssss", $userId, $eventName, $eventStartDate, $eventFinishDate, $collectionDate, $returnDate, $groupName);
 
     if ($stmt_new_booking->execute()) {
-        $stmt_fetch_id = $conn->prepare("SELECT booking_id FROM bookings WHERE (`user_id`, `event_name`, `event_start`, `event_end`, `collection_date`, `return_date`) = (?, ?, ?, ?, ?, ?)");
-        $stmt_fetch_id->bind_param("isssss", $userId, $eventName, $eventStartDate, $eventFinishDate, $collectionDate, $returnDate);
-        $stmt_fetch_id->execute();
-        $bookingID = $stmt_fetch_id->get_result();
-    
-        header("Location: index.php?page=bookings");
+        $booking_id = $conn->insert_id;
+        header("Location: index.php?page=booking_confirmation&bookingID=" . $booking_id);
         exit();
     } else {
         error_log("Database error during booking: " . $stmt_new_booking->error);

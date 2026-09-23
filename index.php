@@ -48,6 +48,9 @@ if(isset($process)){
         case "bookings":
             include_once("bookings.php");
             break;
+        case "booking_confirmation":
+            include_once("booking_confirmation.php");
+            break;
         case "faq_contact":
             include_once("faq_contact.php");
             break;
@@ -58,10 +61,34 @@ if(isset($process)){
             include_once("account.php");
             break;
         case "store_details":
-            include_once("under_construction.php");
+            include_once("store_details.php");
             break;
         case "reports":
-            include_once("under_construction.php");
+              include_once("reports_dashboard.php");
+            break;
+                case "maintenance":
+                        include_once("maintenance.php");
+                        break;
+        case "new_account":
+            include_once("account_creation.php");
+            break;
+        case "manage_accounts":
+            include_once("manage_accounts.php");
+            break;
+        case "edit_user":
+            include_once("edit_user.php");
+            break;
+        case "check_email":
+            include_once("check_email.php");
+            break;
+        case "edit_item":
+            include_once("edit_item.php");
+            break;
+        case "add_item":
+            include_once("add_item.php");
+            break;
+        case "manage_stock":
+            include_once("manage_stock.php");
             break;
         default:
             include_once("home.php");

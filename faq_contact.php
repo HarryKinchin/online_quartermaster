@@ -1,6 +1,124 @@
 <div class="main">
 
 <h1>FAQ</h1><br>
+<!-- Inventory and Booking Section -->
+<h3>Inventory and Booking</h3>
+<div class="accordion">
+    <div class="accordion-item">
+        <button class="accordion-header">
+            <h4>How do I book equipment for a camp or activity?</h4>
+        </button>
+        <div class="accordion-content">
+            <p>Please follow the steps below to book equipment for a camp or activity.</p>
+            <ol>
+                <li>Go to the <a href="index.php?page=create_booking">booking page</a> and fill out the details on the page, then hit "Create Booking".</li><br>
+                <li>Go to the <a href="index.php?page=bookings">bookings page</a>, find your booking and press "edit".</li><br>
+                <li>On the edit page, select the items you want to book and the quantity needed, then hit "Update Booking".</li><br>
+            </ol>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header">
+            <h4>How far in advance do I need to place a booking?</h4>
+        </button>
+        <div class="accordion-content">
+            <p>Please submit booking requests at least 7 days before your event. This gives the Quartermaster time to look at your request before approval.</p>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header">
+            <h4>What should I do if gear is damaged, wet, or missing upon return?</h4>
+        </button>
+        <div class="accordion-content">
+            <p>When you change your booking to 'returned' you will be prompted to enter any details if the equipment has any issues. Tents and canvas must be completely dried before long-term storage to prevent mold.</p>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header">
+            <h4>Can I cancel or modify a booking?</h4>
+        </button>
+        <div class="accordion-content">
+            <p>Yes, you can modify or cancel your booking at any time through the <a href="index.php?page=bookings">bookings page</a>. However, please note:</p>
+            <ul>
+                <li><strong>Before Approval:</strong> You can freely modify or cancel bookings that haven't been approved yet.</li>
+                <li><strong>After Approval:</strong> If your booking has been approved, please contact the Quartermaster before making changes. Significant modifications may require re-approval.</li>
+                <li><strong>Close to Event Date:</strong> Cancellations or major changes requested within 3 days of your event date may be difficult to accommodate. Please plan ahead whenever possible.</li>
+                <li><strong>Equipment Already Reserved:</strong> If equipment has been physically prepared or reserved for your booking, the Quartermaster will notify you if changes aren't possible.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header">
+            <h4>Where and when do I pick up and return equipment?</h4>
+        </button>
+        <div class="accordion-content">
+            <p>Equipment pick-up and returns are handled by the Quartermaster. Here's what you need to know:</p>
+            <ul>
+                <li><strong>Location:</strong> Equipment is stored at various locations. You can see the locations for each item in the <a href="index.php?page=reports">reports</a>.</li>
+                <li><strong>Pickup:</strong> You must arrange a specific pick-up time with the Quartermaster prior to your event. Pick-ups cannot happen on-demand without coordination.</li>
+                <li><strong>Return:</strong> Equipment must be returned by the date specified in your booking. Late returns may impact future bookings for others.</li></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Account and Access Section -->
+<h3>Account and Access</h3>
+<div class="accordion">
+    <div class="accordion-item">
+        <button class="accordion-header">
+            <h4>Who can create an account?</h4>
+        </button>
+        <div class="accordion-content">
+            <p>Accounts can only be made for Section Volunteers, Exec members, or the Quartermaster. Accounts can only be created by admins or the Quartermaster.</p>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header">
+            <h4>How do I reset my password?</h4>
+        </button>
+        <div class="accordion-content">
+            <p>If you forget your password, click the "Forgot Password" link on the login page or contact the admin (link to email at bottom of page) for assistance. You can also change your password at any time when logged in via the <a href="index.php?page=account">Account page</a></p>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header">
+            <h4>What permissions do different user types have?</h4>
+        </button>
+        <div class="accordion-content">
+            <p>There are two main user types in the system:</p>
+            <ul>
+                <li><strong>Section Volunteers:</strong> Can create and manage their own equipment bookings, edit booking details, and view equipment availability. They submit bookings for Quartermaster approval.</li>
+                <li><strong>Quartermaster & Admins:</strong> Full access to the system. Can approve/reject bookings, manage equipment inventory, view all bookings and reports, create user accounts, and handle equipment returns and damage assessments.</li>
+            </ul><br>
+            <p>Note: Exec members have the same permissions as Quartermasters in the booking system.</p>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <button class="accordion-header">
+            <h4>How do I update my profile information?</h4>
+        </button>
+        <div class="accordion-content">
+            <p>You can update your profile information anytime through the <a href="index.php?page=account">Account page</a>. You can modify:</p>
+            <ul>
+                <li><strong>Name:</strong> Your full name as it appears on the system.</li><br>
+                <li><strong>Email Address:</strong> Your contact email.</li><br>
+                <li><strong>Password:</strong> Change your password at any time for security purposes.</li>
+            </ul><br>
+            <p>After making changes, click "Update profile" to save the changes</p>
+        </div>
+    </div>
+</div>
+
+<!-- Data, Privacy, and Security Section -->
+<h3>Data, Privacy, and Security</h3>
 <div class="accordion">
     <div class="accordion-item">
         <button class="accordion-header">
@@ -46,7 +164,99 @@
 </div>
 
 <h1>Contact</h1><br>
-<h4>For any issues with the website or suggestions, please send me an email at <a href="mailto:h.j.kinchin@gmail.com">h.j.kinchin@gmail.com</a></h4>
+
+<div class="form-container" style="max-width: 600px; margin: 2rem auto;">
+    <h3 class="form-title">Send us a Message</h3>
+    
+    <?php
+    require 'lib/PHPMailer/PHPMailer.php';
+    require 'lib/PHPMailer/SMTP.php';
+    require 'lib/PHPMailer/Exception.php';
+    
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = htmlspecialchars(trim($_POST['name'] ?? ''));
+        $email = htmlspecialchars(trim($_POST['email'] ?? ''));
+        $subject = htmlspecialchars(trim($_POST['subject'] ?? ''));
+        $message = htmlspecialchars(trim($_POST['message'] ?? ''));
+        
+        $errors = [];
+        
+        if (empty($name)) {
+            $errors[] = "Name is required";
+        } elseif (empty($email)) {
+            $errors[] = "Email is required";
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "Please enter a valid email";
+        }
+        
+        if (empty($subject)) $errors[] = "Subject is required";
+        if (empty($message)) $errors[] = "Message is required";
+        
+        if (empty($errors)) {
+            
+            try {
+                require_once './mail_config.php';
+                $mail = new PHPMailer(true);
+                configure_qm_mailer($mail);
+                
+                $mail->setFrom(getenv('QM_SMTP_FROM') ?: getenv('QM_SMTP_USERNAME'), $name);
+                $mail->addAddress(getenv('QM_SMTP_FROM') ?: getenv('QM_SMTP_USERNAME'));
+                $mail->Subject = "Contact Form: " . $subject;
+                $mail->Body = "From: $name ($email)\n\nSubject: $subject\n\nMessage:\n$message";
+                $mail->isHTML(false);
+                
+                $mail->send();
+                echo '<div class="success-message" style="background-color: #dcfce7; border: 1px solid #22c55e; color: #16a34a; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; text-align: center;">Thank you! Your message has been sent successfully. We will get back to you soon.</div>';
+            } catch (Exception $e) {
+                echo '<div class="error">Failed to send message. Please try again or email us directly at onlinescoutqm@gmail.com</div>';
+            }
+        } else {
+            foreach ($errors as $error) {
+                echo '<div class="error">' . $error . '</div>';
+            }
+        }
+    }
+    ?>
+    
+    <form method="POST" class="form-layout">
+        <div class="form-row" style="grid-template-columns: 1fr;">
+            <div>
+                <label class="form-label">Name *</label>
+                <input type="text" name="name" class="form-input" placeholder="Your name" required>
+            </div>
+        </div>
+        
+        <div class="form-row" style="grid-template-columns: 1fr;">
+            <div>
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-input" placeholder="your.email@example.com" required>
+            </div>
+        </div>
+        
+        <div class="form-row" style="grid-template-columns: 1fr;">
+            <div>
+                <label class="form-label">Subject *</label>
+                <input type="text" name="subject" class="form-input" placeholder="What is this about?" required>
+            </div>
+        </div>
+        
+        <div class="form-row" style="grid-template-columns: 1fr;">
+            <div>
+                <label class="form-label">Message *</label>
+                <textarea name="message" class="form-input" placeholder="Please describe your issue or suggestion..." rows="6" style="resize: vertical; padding: 0.75rem 1rem;" required></textarea>
+            </div>
+        </div>
+        
+        <div style="text-align: center;">
+            <button type="submit" style="width: auto; padding: 0.75rem 2rem;">Send Message</button>
+        </div>
+        
+        <p class="form-help" style="text-align: center;">Or email us directly at <a href="mailto:onlinescoutqm@gmail.com">onlinescoutqm@gmail.com</a></p>
+    </form>
+</div>
 
 <script src="./static/js/faq_funcs.js"></script>
 </div>

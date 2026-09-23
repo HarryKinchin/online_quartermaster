@@ -1,6 +1,6 @@
 <div class="main">
-    <div style="align-self: center;" class="">
-        <h1>Under Construction</h1>
-        <p style="justify-content: center;">Page currently under construction, please come back soon...</p>
+    <div class="account-container">
+        <h1 class="form-title">Under Construction</h1>
+        <p class="account-container">Page currently under construction, please come back soon...</p>
     </div>
 </div>

@@ -22,9 +22,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: "POST",
                 body: formData
             })
-            .then(response => response.text())
-            .then(text => {
-                console.log("Server Response:", text);
+            .then(response => {
+                return response.text().then(text => ({ ok: response.ok, text }));
+            })
+            .then(result => {
+                if (!result.ok) {
+                    const validationMessage = document.getElementById('dateValidationMessage');
+                    if (validationMessage) {
+                        validationMessage.textContent = result.text || 'Invalid booking date.';
+                        validationMessage.style.display = 'block';
+                    } else {
+                        alert(result.text || 'Invalid booking date.');
+                    }
+                    return;
+                }
+                console.log("Server Response:", result.text);
                 field.classList.add('updated');
                 setTimeout(() => field.classList.remove('updated'), 2000);
             })
