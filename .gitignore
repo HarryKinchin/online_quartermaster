@@ -32,7 +32,7 @@ vendor/
 composer.lock
 
 # Local database exports and backups
-scout_bookings/scout_bookings_data.sql
+scout_bookings/db_backup_01_10_26.sql
 static/images/item_images*
 *.sql.bak
 *.dump
