@@ -265,7 +265,7 @@ $components_result->data_seek(0);
 $components_result->data_seek(0);
 
 // Fetch locations for dropdown
-$stmt = $conn->prepare("SELECT location_code, location_name FROM locations ORDER BY location_name");
+$stmt = $conn->prepare("SELECT location_code, location_name FROM locations ORDER BY CASE WHEN location_name REGEXP ' [0-9]+$' THEN LEFT(location_name, CHAR_LENGTH(location_name) - CHAR_LENGTH(SUBSTRING_INDEX(location_name, ' ', -1)) - 1) ELSE location_name END, CASE WHEN location_name REGEXP ' [0-9]+$' THEN CAST(SUBSTRING_INDEX(location_name, ' ', -1) AS UNSIGNED) ELSE 0 END, location_name");
 $stmt->execute();
 $locations_result = $stmt->get_result();
 $stmt->close();

@@ -236,7 +236,7 @@ while ($row = $result2->fetch_assoc()) {
     $categories[] = $row;
 }
 $locations = [];
-$stmt_locations = $conn->prepare("SELECT location_code, location_name FROM locations WHERE UPPER(TRIM(location_code)) <> 'IU' ORDER BY location_name");
+$stmt_locations = $conn->prepare("SELECT location_code, location_name FROM locations WHERE UPPER(TRIM(location_code)) <> 'IU' ORDER BY CASE WHEN location_name REGEXP ' [0-9]+$' THEN LEFT(location_name, CHAR_LENGTH(location_name) - CHAR_LENGTH(SUBSTRING_INDEX(location_name, ' ', -1)) - 1) ELSE location_name END, CASE WHEN location_name REGEXP ' [0-9]+$' THEN CAST(SUBSTRING_INDEX(location_name, ' ', -1) AS UNSIGNED) ELSE 0 END, location_name");
 $stmt_locations->execute();
 $locations_result = $stmt_locations->get_result();
 while ($row = $locations_result->fetch_assoc()) {

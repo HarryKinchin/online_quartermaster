@@ -123,7 +123,7 @@ usort($item_summary, function ($left, $right) {
 $stmt_categories = $conn->prepare("SELECT category_code, category_name FROM categories ORDER BY category_name");
 $stmt_categories->execute();
 $categories = $stmt_categories->get_result()->fetch_all(MYSQLI_ASSOC);
-$stmt_locations = $conn->prepare("SELECT location_code, location_name FROM locations ORDER BY location_name");
+$stmt_locations = $conn->prepare("SELECT location_code, location_name FROM locations ORDER BY CASE WHEN location_name REGEXP ' [0-9]+$' THEN LEFT(location_name, CHAR_LENGTH(location_name) - CHAR_LENGTH(SUBSTRING_INDEX(location_name, ' ', -1)) - 1) ELSE location_name END, CASE WHEN location_name REGEXP ' [0-9]+$' THEN CAST(SUBSTRING_INDEX(location_name, ' ', -1) AS UNSIGNED) ELSE 0 END, location_name");
 $stmt_locations->execute();
 $locations = $stmt_locations->get_result()->fetch_all(MYSQLI_ASSOC);
 $qualities = [

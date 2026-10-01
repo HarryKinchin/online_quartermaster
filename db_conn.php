@@ -1,6 +1,10 @@
 <?php
 
 $env_values = [];
+// MAMP Version
+// $env_file = __DIR__ . '/.env';
+
+// Live Version
 $env_file = __DIR__ . '/../private/.env';
 if (is_readable($env_file)) {
   $env_lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

@@ -22,7 +22,7 @@ $queries = [
     'locations' => [
         'name' => 'location-summary.csv',
         'header' => ['Location', 'Total quantity', 'In use quantity'],
-        'sql' => "SELECT locations.location_name, COUNT(*), COUNT(CASE WHEN components.item_location_code = 'IU' THEN 1 END) FROM components LEFT JOIN locations ON components.item_location_code = locations.location_code GROUP BY locations.location_name ORDER BY locations.location_name"
+        'sql' => "SELECT locations.location_name, COUNT(*), COUNT(CASE WHEN components.item_location_code = 'IU' THEN 1 END) FROM components LEFT JOIN locations ON components.item_location_code = locations.location_code GROUP BY locations.location_name ORDER BY CASE WHEN locations.location_name REGEXP ' [0-9]+$' THEN LEFT(locations.location_name, CHAR_LENGTH(locations.location_name) - CHAR_LENGTH(SUBSTRING_INDEX(locations.location_name, ' ', -1)) - 1) ELSE locations.location_name END, CASE WHEN locations.location_name REGEXP ' [0-9]+$' THEN CAST(SUBSTRING_INDEX(locations.location_name, ' ', -1) AS UNSIGNED) ELSE 0 END, locations.location_name"
     ]
 ];
 if (!isset($queries[$report])) {
