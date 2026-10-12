@@ -1,6 +1,6 @@
 <div class="main">
 <?php
-$user_level = $_SESSION['user_level'] ?? 0;
+$user_level = (int) ($_SESSION['user_level'] ?? 0);
 $user_id = $_SESSION['user_id'] ?? 0;
 $user_group_name = '';
 $stmt_current_user = $conn->prepare("SELECT group_name FROM users WHERE user_id = ?");

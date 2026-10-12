@@ -1,25 +1,32 @@
 <?php
 session_start();
 require 'db_conn.php';
-$user_level = $_SESSION['user_level'] ?? 0;
-$user_id = $_SESSION['user_id'] ?? null;
+$user_level = (int) ($_SESSION['user_level'] ?? 0);
+$user_id = (int) ($_SESSION['user_id'] ?? 0);
 if (!in_array($user_level, [1, 2, 3], true)) {
     header('Location: index.php');
     exit;
 }
 
-$conn->query("CREATE TABLE IF NOT EXISTS booking_item_components (booking_id INT NOT NULL, item_code VARCHAR(50) NOT NULL, component_code VARCHAR(10) NOT NULL, source_location_code VARCHAR(50) DEFAULT NULL, PRIMARY KEY (booking_id, item_code, component_code), UNIQUE KEY (component_code)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+$transaction_started = false;
+try {
+$conn->query("CREATE TABLE IF NOT EXISTS booking_item_components (booking_id INT NOT NULL, item_code VARCHAR(50) NOT NULL, component_code VARCHAR(20) NOT NULL, source_location_code VARCHAR(50) DEFAULT NULL, PRIMARY KEY (booking_id, item_code, component_code), UNIQUE KEY (component_code)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 
 $mapping_columns = $conn->query("SHOW COLUMNS FROM booking_item_components");
 $has_source_location = false;
+$component_code_needs_resize = false;
 while ($mapping_column = $mapping_columns->fetch_assoc()) {
     if ($mapping_column['Field'] === 'source_location_code') {
         $has_source_location = true;
-        break;
+    } elseif ($mapping_column['Field'] === 'component_code' && preg_match('/^varchar\((\d+)\)$/i', $mapping_column['Type'], $matches)) {
+        $component_code_needs_resize = (int) $matches[1] < 20;
     }
 }
 if (!$has_source_location) {
     $conn->query("ALTER TABLE booking_item_components ADD source_location_code VARCHAR(50) DEFAULT NULL");
+}
+if ($component_code_needs_resize) {
+    $conn->query("ALTER TABLE booking_item_components MODIFY component_code VARCHAR(20) NOT NULL");
 }
 
 $primary_column_count = 0;
@@ -42,7 +49,7 @@ function reserve_booking_items($conn, $booking_id) {
         if ($quantity_needed <= 0) continue;
 
         $item_code = $item['item_code'];
-        $stmt_stock = $conn->prepare("SELECT c.component_code, c.item_location_code FROM components c WHERE c.item_code = ? AND c.quantity = 1 AND c.item_quality <> '0' AND UPPER(TRIM(c.item_location_code)) NOT IN ('IU', 'RETIRED') AND NOT EXISTS (SELECT 1 FROM booking_item_components bic INNER JOIN bookings reserved_booking ON reserved_booking.booking_id = bic.booking_id WHERE bic.component_code = c.component_code AND reserved_booking.booking_status_id IN (2, 3)) ORDER BY c.component_code LIMIT ? FOR UPDATE");
+        $stmt_stock = $conn->prepare("SELECT c.component_code, c.item_location_code FROM components c WHERE c.item_code = ? AND c.quantity = 1 AND c.item_quality <> '0' AND UPPER(TRIM(c.item_location_code)) NOT IN ('IU', 'RETIRED') AND NOT EXISTS (SELECT 1 FROM booking_item_components bic WHERE bic.component_code = c.component_code) ORDER BY c.component_code LIMIT ? FOR UPDATE");
         $stmt_stock->bind_param("si", $item_code, $quantity_needed);
         $stmt_stock->execute();
         $stock_rows = $stmt_stock->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -190,6 +197,7 @@ if ($booking_id && $status_id) {
 
         if ($allowed) {
             $conn->begin_transaction();
+            $transaction_started = true;
             $inventory_updated = true;
 
             if ($current_status === 3 && $status_id !== 3) {
@@ -233,11 +241,25 @@ if ($booking_id && $status_id) {
             }
             if ($stmt->execute()) {
                 $conn->commit();
+                $transaction_started = false;
             } else {
                 $conn->rollback();
+                $transaction_started = false;
+                $_SESSION['status_update_error'] = 'The booking status could not be updated. Please try again or contact an administrator.';
             }
         }
     }
+}
+} catch (mysqli_sql_exception $exception) {
+    if ($transaction_started) {
+        try {
+            $conn->rollback();
+        } catch (mysqli_sql_exception $rollback_exception) {
+            error_log('Booking status rollback failed: ' . $rollback_exception->getMessage());
+        }
+    }
+    error_log('Booking status update failed: ' . $exception->getMessage());
+    $_SESSION['status_update_error'] = 'The booking status could not be updated because of a database error. Please try again or contact an administrator.';
 }
 
 header('Location: index.php?page=bookings');
