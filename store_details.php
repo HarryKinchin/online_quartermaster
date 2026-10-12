@@ -2,13 +2,31 @@
     <div class="form-container">
         <h1 class="form-title">Store Details</h1>
 
+        <?php
+        require_once 'db_conn.php';
+        $search = trim($_GET['q'] ?? '');
+        $category_filter = trim($_GET['category'] ?? '');
+        $stmt_categories = $conn->prepare('SELECT category_code, category_name FROM categories ORDER BY category_name');
+        $stmt_categories->execute();
+        $categories = $stmt_categories->get_result()->fetch_all(MYSQLI_ASSOC);
+        ?>
+
         <form method="get" action="index.php" class="form-layout">
             <input type="hidden" name="page" value="store_details">
             <div>
                 <label for="q" class="form-label">Search items</label>
-                <input type="search" id="q" name="q" class="form-input" value="<?php echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>">
+                <input type="search" id="q" name="q" class="form-input" value="<?php echo htmlspecialchars($search); ?>">
             </div>
-            <button type="submit" class="submit-button">Search</button>
+            <div>
+                <label for="store-category" class="form-label">Category</label>
+                <select id="store-category" name="category" class="form-input">
+                    <option value="">All categories</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo htmlspecialchars($category['category_code']); ?>" <?php echo $category_filter === $category['category_code'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($category['category_name']); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <button type="submit" class="submit-button">Apply filters</button>
         </form>
 
         <?php if (isset($_SESSION['user_level']) && in_array($_SESSION['user_level'], [1, 2], true)): ?>
@@ -20,22 +38,26 @@
         <?php endif; ?>
 
         <?php
-        require_once 'db_conn.php';
-        $search = isset($_GET['q']) ? trim($_GET['q']) : '';
-
         $sql = "
             SELECT i.item_code, i.item_name, i.item_desc, i.image_1, c.category_name
             FROM items i
             LEFT JOIN categories c ON i.category_code = c.category_code
-            WHERE i.item_code LIKE ?
+            WHERE (i.item_code LIKE ?
             OR i.item_name LIKE ?
             OR i.item_desc LIKE ?
-            OR c.category_name LIKE ?
+            OR c.category_name LIKE ?)
         ";
 
-        // Dynamically change the sorting strategy and parameter count based on search input
+        $like = $search !== '' ? '%' . $search . '%' : '%';
+        $params = [$like, $like, $like, $like];
+        $types = 'ssss';
+        if ($category_filter !== '') {
+            $sql .= ' AND i.category_code = ?';
+            $params[] = $category_filter;
+            $types .= 's';
+        }
+
         if ($search !== '') {
-            // Strategy 1: User is searching -> Description is now the least important match
             $sql .= "
                 ORDER BY
                     (i.item_name LIKE ?) DESC,
@@ -44,29 +66,22 @@
                     (i.item_desc LIKE ?) DESC,
                     i.item_name ASC
             ";
-
-            $stmt_equipment = $conn->prepare($sql);
-            $like = '%' . $search . '%';
-            $stmt_equipment->bind_param(
-                "ssssssss",
-                $like, $like, $like, $like,
-                $like, $like, $like, $like
-            );
+            array_push($params, $like, $like, $like, $like);
+            $types .= 'ssss';
         } else {
-            // Strategy 2: Search is empty -> Group by Category alphabetically, then Item Name alphabetically
             $sql .= "
                 ORDER BY
                     c.category_name ASC,
                     i.item_name ASC
             ";
-
-            $stmt_equipment = $conn->prepare($sql);
-            $like = '%';
-            $stmt_equipment->bind_param(
-                "ssss",
-                $like, $like, $like, $like
-            );
         }
+
+        $stmt_equipment = $conn->prepare($sql);
+        $bind_params = [$types];
+        foreach ($params as $key => $value) {
+            $bind_params[] = &$params[$key];
+        }
+        call_user_func_array([$stmt_equipment, 'bind_param'], $bind_params);
 
         // Fetch total quantities and subtract quantities from active bookings
         $stmt_quantities = $conn->prepare("
@@ -147,7 +162,7 @@
                 <?php endwhile; ?>
             </div>
         <?php else: ?>
-            <p>No items found.</p>
+            <p>No items found in selected category(s).</p>
         <?php endif; ?>
     </div>
 </div>
