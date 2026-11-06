@@ -1,5 +1,14 @@
 <?php
-$stmt_equipment = $conn->prepare("SELECT item_code, category_code, item_name, item_desc, image_1 FROM items");
+$booking_id = filter_input(INPUT_GET, 'bookingID', FILTER_VALIDATE_INT);
+$stmt_equipment = $conn->prepare("
+    SELECT item_code, category_code, item_name, item_desc, image_1, is_archived
+    FROM items
+    WHERE is_archived = 0 OR item_code IN (
+        SELECT item_code FROM booking_items WHERE booking_id = ?
+    )
+");
+$booking_id_for_equipment = $booking_id ?: 0;
+$stmt_equipment->bind_param('i', $booking_id_for_equipment);
 $stmt_equipment->execute();
 $equipment_result = $stmt_equipment->get_result();
 
@@ -82,7 +91,6 @@ $stmt_group->execute();
 $group_result = $stmt_group->get_result();
 
 // Check if we are editing an existing booking
-$booking_id = $_GET['bookingID'] ?? null;
 $existing_booking = null;
 
 if ($booking_id) {
@@ -260,10 +268,11 @@ if ($booking_id) {
                                                     $image_path = './static/images/not-found.svg';
                                                 }
                                                 $item_code = $item['item_code'];
+                                                $is_archived = (int) $item['is_archived'] === 1;
 
                                                 // Get the total and available counts for the current item_code
                                                 $total_count = $inventory_summary[$item_code]['total'] ?? 0;
-                                                $available_count = $inventory_summary[$item_code]['available'] ?? 0;
+                                                $available_count = $is_archived ? 0 : ($inventory_summary[$item_code]['available'] ?? 0);
                                                 $reserved_count = $inventory_summary[$item_code]['reserved'] ?? 0;
                                         ?>
                                                 <div class="grid-layout booking-item-card">
@@ -273,6 +282,7 @@ if ($booking_id) {
                                                     
                                                     <div class="item-name">
                                                         <?php echo $item_name; ?>
+                                                        <?php if ($is_archived): ?><strong> (Archived)</strong><?php endif; ?>
                                                         <span class="info-button" onclick="toggleDescription('item-desc-<?php echo $item_code; ?>')">i</span>
                                                     </div>
                                                     

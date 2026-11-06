@@ -6,20 +6,20 @@
         require_once 'db_conn.php';
         $search = trim($_GET['q'] ?? '');
         $category_filter = trim($_GET['category'] ?? '');
-        $delete_item_feedback = $_SESSION['store_delete_feedback'] ?? null;
-        unset($_SESSION['store_delete_feedback']);
+        $archive_item_feedback = $_SESSION['archive_item_feedback'] ?? null;
+        unset($_SESSION['archive_item_feedback']);
         $can_manage_items = isset($_SESSION['user_level']) && in_array($_SESSION['user_level'], [1, 2], true);
-        if ($can_manage_items && empty($_SESSION['delete_item_token'])) {
-            $_SESSION['delete_item_token'] = bin2hex(random_bytes(32));
+        if ($can_manage_items && empty($_SESSION['archive_item_token'])) {
+            $_SESSION['archive_item_token'] = bin2hex(random_bytes(32));
         }
         $stmt_categories = $conn->prepare('SELECT category_code, category_name FROM categories ORDER BY category_name');
         $stmt_categories->execute();
         $categories = $stmt_categories->get_result()->fetch_all(MYSQLI_ASSOC);
         ?>
 
-        <?php if ($delete_item_feedback): ?>
-            <div class="<?php echo $delete_item_feedback['type'] === 'success' ? 'success-message' : 'error'; ?>" style="margin-bottom: 1rem;">
-                <?php echo htmlspecialchars($delete_item_feedback['message']); ?>
+        <?php if ($archive_item_feedback): ?>
+            <div class="<?php echo $archive_item_feedback['type'] === 'success' ? 'success-message' : 'error'; ?>" style="margin-bottom: 1rem;">
+                <?php echo htmlspecialchars($archive_item_feedback['message']); ?>
             </div>
         <?php endif; ?>
 
@@ -54,7 +54,8 @@
             SELECT i.item_code, i.item_name, i.item_desc, i.image_1, c.category_name
             FROM items i
             LEFT JOIN categories c ON i.category_code = c.category_code
-            WHERE (i.item_code LIKE ?
+            WHERE i.is_archived = 0
+            AND (i.item_code LIKE ?
             OR i.item_name LIKE ?
             OR i.item_desc LIKE ?
             OR c.category_name LIKE ?)
@@ -167,13 +168,13 @@
                                     <a class="edit-button" href="index.php?page=manage_stock&item_code=<?php echo urlencode($item['item_code']); ?>" style="background-color: #3a8a9e; color: white;">
                                         📦 Manage Stock
                                     </a>
-                                    <form method="post" action="delete_item.php" style="display: inline;" onsubmit="return confirm(<?php echo htmlspecialchars(json_encode('Permanently delete ' . $item['item_name'] . ' (' . $item['item_code'] . ') and all its units? This cannot be undone.'), ENT_QUOTES, 'UTF-8'); ?>);">
+                                    <form method="post" action="archive_item.php" style="display: inline;" onsubmit="return confirm(<?php echo htmlspecialchars(json_encode('Archive ' . $item['item_name'] . ' (' . $item['item_code'] . ')? It will no longer appear in the store or new bookings. Its units and maintenance history will be kept.'), ENT_QUOTES, 'UTF-8'); ?>);">
                                         <input type="hidden" name="item_code" value="<?php echo htmlspecialchars($item['item_code']); ?>">
-                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['delete_item_token']); ?>">
+                                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['archive_item_token']); ?>">
                                         <input type="hidden" name="q" value="<?php echo htmlspecialchars($search); ?>">
                                         <input type="hidden" name="category" value="<?php echo htmlspecialchars($category_filter); ?>">
                                         <button type="submit" class="edit-button" style="background-color: #dc2626; color: white;">
-                                            🗑️ Delete Item
+                                            Archive Item
                                         </button>
                                     </form>
                                 <?php endif; ?>

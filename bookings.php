@@ -259,14 +259,15 @@ function render_section($title, $items) {
             options.push(
                 { value: 1, label: 'Pending' },
                 { value: 2, label: 'Approved' },
-                { value: 3, label: 'Collected' },
-                { value: 4, label: 'Returned' },
-                { value: 5, label: 'Cancelled' }
+                { value: 3, label: 'Collected' }
             );
+            if (currentStatusID === 3) {
+                options.push({ value: 4, label: 'Returned' });
+            }
+            options.push({ value: 5, label: 'Cancelled' });
         } else if (currentUserLevel === 3 && currentStatusID === 2) {
             options.push(
                 { value: 3, label: 'Collected' },
-                { value: 4, label: 'Returned' },
                 { value: 5, label: 'Cancelled' }
             );
         }
@@ -338,7 +339,12 @@ function render_section($title, $items) {
                     note.name = `return_items[${item.item_code}][components][${componentCode}][return_note]`;
                     note.className = 'form-input';
                     note.rows = 2;
-                    note.required = true;
+                    note.required = quality.value !== 'Good';
+                    noteLabel.textContent = note.required ? 'Return note (required)' : 'Return note (optional)';
+                    quality.addEventListener('change', function () {
+                        note.required = quality.value !== 'Good';
+                        noteLabel.textContent = note.required ? 'Return note (required)' : 'Return note (optional)';
+                    });
                     componentBlock.append(qualityLabel, quality, noteLabel, note);
                     returnItems.append(componentBlock);
                 }

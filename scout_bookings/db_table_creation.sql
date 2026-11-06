@@ -143,6 +143,7 @@ CREATE TABLE `items` (
   `item_name` varchar(50) DEFAULT NULL,
   `item_desc` text COMMENT 'desc of item contents',
   `image_1` varchar(255) DEFAULT NULL,
+  `is_archived` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`item_code`),
   KEY `category_code` (`category_code`),
   CONSTRAINT `items_ibfk_1` FOREIGN KEY (`category_code`) REFERENCES `categories` (`category_code`)

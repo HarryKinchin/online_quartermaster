@@ -7,6 +7,7 @@ It allows users to manage equipment, track individual stock units, create bookin
 ## Features
 
 - Equipment and category management
+- Item archiving that preserves stock and maintenance history
 - Individual unit tracking with unique component codes
 - Storage location management
 - Equipment condition and maintenance history
@@ -103,4 +104,3 @@ Accounts can be created by an administrator or Quartermaster via the [`manage_ac
 ## Current limitations
 - There is no default account within the database, so you would need to manually add in the details within a database editor
 - Password reset and account creation relies on a SMTP configuration
-

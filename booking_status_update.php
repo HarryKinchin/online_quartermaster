@@ -141,7 +141,7 @@ function return_booking_items_from_use($conn, $booking_id, $return_items = null)
                 $component_return = $component_returns[$mapped_component['component_code']] ?? null;
                 $quality_description = trim($component_return['quality_desc'] ?? '');
                 $return_note = trim($component_return['return_note'] ?? '');
-                if (!in_array($quality_description, $allowed_quality_descriptions, true) || $return_note === '') {
+                if (!in_array($quality_description, $allowed_quality_descriptions, true) || ($quality_description !== 'Good' && $return_note === '')) {
                     return false;
                 }
                 $item_quality = strtolower($quality_description) === 'good' ? '1' : '0';
@@ -192,7 +192,13 @@ if ($booking_id && $status_id) {
         if (in_array($user_level, [1, 2], true)) {
             $allowed = true;
         } elseif ($user_level === 3 && $current_status === 2) {
-            $allowed = in_array($status_id, [3, 4, 5], true);
+            $allowed = in_array($status_id, [3, 5], true);
+        }
+
+        if ($allowed && $status_id === 4 && $current_status !== 3) {
+            $_SESSION['status_update_error'] = 'Only collected bookings can be marked as returned. Mark the booking as Collected first.';
+            header('Location: index.php?page=bookings');
+            exit;
         }
 
         if ($allowed) {
@@ -200,7 +206,7 @@ if ($booking_id && $status_id) {
             $transaction_started = true;
             $inventory_updated = true;
 
-            if ($current_status === 3 && $status_id !== 3) {
+            if ($current_status === 3 && !in_array($status_id, [3, 4], true)) {
                 $inventory_updated = return_booking_items_from_use($conn, $booking_id);
                 if ($inventory_updated && $status_id === 2) {
                     $inventory_updated = reserve_booking_items($conn, $booking_id);
@@ -225,7 +231,7 @@ if ($booking_id && $status_id) {
             if (!$inventory_updated) {
                 $conn->rollback();
                 $_SESSION['status_update_error'] = $status_id === 4
-                    ? 'Every returned item must have a quality description and return note, and the booking must have collected items in use.'
+                    ? 'Every returned item must have a valid condition, and non-good items need a return note. The booking must also have collected items in use.'
                     : 'The booking could not be updated because one or more requested items do not have enough good, unreserved physical units.';
                 header('Location: index.php?page=bookings');
                 exit;

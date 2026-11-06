@@ -38,6 +38,14 @@ if (strpos($fieldName, 'booked_item_') !== false) {
     $stmt_current->execute();
     $current_row = $stmt_current->get_result()->fetch_assoc();
     $current_quantity = (int) ($current_row['quantity_needed'] ?? 0);
+    $stmt_archived = $conn->prepare("SELECT is_archived FROM items WHERE item_code = ?");
+    $stmt_archived->bind_param("s", $itemCode);
+    $stmt_archived->execute();
+    $item_archived = (int) ($stmt_archived->get_result()->fetch_assoc()['is_archived'] ?? 1) === 1;
+    if ($item_archived && $quantity > $current_quantity) {
+        http_response_code(400);
+        die('Archived items cannot be added to or increased in a booking.');
+    }
     $maximum_quantity = $available_units + $current_quantity;
     if ($quantity > $maximum_quantity) {
         http_response_code(400);
